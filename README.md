@@ -1,32 +1,71 @@
-# Embergard Edge Models
+# Embergard Pluggable Models
 
-On-device GGUF model binaries for Embergard — the secure AI companion.
+Official on-device GGUF model mirrors for **Embergard** — the private, on-device AI companion.
 
-**R21/R22: Ember models only. No Ollama. No Gemma.**
+This repository distributes quantized model binaries via **GitHub Releases**. The Embergard Android app downloads them directly, verifies integrity with SHA3-256, and runs inference entirely on-device.
 
-## Release Assets
+**R21 / R22 compliance**
 
-Model binaries are distributed via GitHub Releases. Each release includes:
+- No Ollama. These are native GGUF files consumed by the bundled `ember-streaming` Rust engine.
+- No forced Gemma. Models are pluggable and user-selectable; the bundled tokenizer currently matches the BPE family best (Qwen).
 
-- GGUF model file (Q4_K_M quantized)
-- SHA-256 checksum
-- Ed25519 signature (production releases)
+## Available release assets
 
-## Available Models
+| Model | Filename | Size | Quant | Tokenizer family | License | Commercial use |
+|---|---|---|---|---|---|---|
+| Qwen 2.5 1.5B Instruct | `qwen2.5-1.5b-q4.gguf` | ~1.1 GB | Q4_K_M | BPE ✅ engine-matched | Apache-2.0 | Yes, with attribution |
+| TinyLlama 1.1B Chat | `tinyllama-1.1b-q4.gguf` | ~638 MB | Q4_K_M | SentencePiece | Apache-2.0 | Yes, with attribution |
+| Gemma 2 2B Instruct | `gemma-2-2b-q4.gguf` | ~1.2 GB | Q4_K_M | SentencePiece | Gemma Terms of Use | Yes, subject to Google terms |
+| Llama 3.2 3B Instruct | `llama-3.2-3b-q4.gguf` | ~2.0 GB | Q4_K_M | SentencePiece | Llama 3.2 Community License | Yes if < 700M MAU |
+| Phi 3.5 Mini | `phi-3.5-mini-q4.gguf` | ~2.0 GB | Q4_K_M | SentencePiece | MIT | Yes |
+| Nemotron 3 Nano | `nemotron-3-nano-q4.gguf` | ~1.3 GB | Q4_K_M | SentencePiece | TBD | TBD |
 
-| Model | Filename | Size | Quant | Context | Device Class |
-|-------|----------|------|-------|---------|--------------|
-| Ember Edge | ember-fallback.gguf | ~1.9GB | Q4_K_M | 2048-8192 | All (auto-selected) |
+> **Engine compatibility note:** The bundled `ember-streaming` engine currently ships a Qwen/BPE tokenizer. SentencePiece-family models (TinyLlama, Gemma, Llama, Phi, Nemotron) will load but may decode into gibberish until per-model tokenizer support lands. Qwen is the recommended first download.
 
-## Download Protocol
+## Release checksums
 
-Embergard app downloads follow this priority:
+Integrity is verified with SHA3-256. Checksums are published here and pinned in the app.
 
-1. **Primary CDN**: `https://embergard.app/models/`
-2. **Fallback mirror**: GitHub Releases (this repo)
+| Filename | SHA3-256 |
+|---|---|
+| `qwen2.5-1.5b-q4.gguf` | `sha3-256:4984ab13737302f76ed665ac7cab9f42875c80eec4519eebc814c6535e875e17` |
+| `tinyllama-1.1b-q4.gguf` | `sha3-256:27dd93103d21600b967d9f8fac8e87f31ff30ed2c613a6fee1207ef3bce6b69f` |
 
-All downloads use HTTPS with SHA-256 integrity verification.
+## Download protocol
 
-## P1 Compliance
+Embergard uses this priority:
 
-All model data stays on-device. No model content leaves the device. No PII in training data. No cloud inference.
+1. **Primary mirror**: GitHub Releases (`https://github.com/Aethel-Guard/embergard-models/releases/download/...`)
+2. **Fallback**: upstream HuggingFace / original model source
+
+All downloads are HTTPS-only and include:
+
+- SHA3-256 integrity check
+- GGUF magic-byte validation
+- Minimum-size check
+
+## License notices
+
+### Apache-2.0 models (Qwen 2.5, TinyLlama)
+
+Licensed under the Apache License, Version 2.0. You may obtain a copy at https://www.apache.org/licenses/LICENSE-2.0
+
+### Gemma 2
+
+Subject to the Google Gemma Terms of Use. See https://ai.google.dev/gemma/terms
+
+### Llama 3.2
+
+Subject to the Meta Llama 3.2 Community License Agreement. Commercial use permitted for products/services with fewer than 700 million monthly active users; larger deployments require a separate license from Meta.
+
+### Phi 3.5
+
+Licensed under the MIT License. Copyright (c) Microsoft Corporation.
+
+## P1 / P7 compliance
+
+- All model data stays on-device.
+- No model content leaves the device.
+- No PII in training data.
+- No cloud inference by default.
+- Downloads use HTTPS only.
