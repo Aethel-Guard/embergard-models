@@ -9,6 +9,29 @@ This repository distributes quantized model binaries via **GitHub Releases**. Th
 - No Ollama. These are native GGUF files consumed by the bundled `ember-streaming` Rust engine.
 - No forced Gemma. Models are pluggable and user-selectable; the bundled tokenizer currently matches the BPE family best (Qwen).
 
+## Release status
+
+Release `v1.0.0-pluggable` has been created. Asset uploads for `qwen2.5-1.5b-q4.gguf` and `tinyllama-1.1b-q4.gguf` are pending because:
+
+1. Direct uploads from the local build host are blocked by the OpenClaw egress proxy (`uploads.github.com` returns `403` through the CONNECT tunnel).
+2. A GitHub Actions mirror workflow exists (`.github/workflows/mirror-models.yml`) but the `Aethel-Guard` org currently cannot run Actions due to a billing/spending-limit flag.
+
+To complete the mirror from an unblocked network, download the two files from HuggingFace and upload them to the release:
+
+```bash
+# From a machine without the OpenClaw proxy:
+curl -L -o qwen2.5-1.5b-q4.gguf \
+  "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/main/qwen2.5-1.5b-instruct-q4_k_m.gguf"
+curl -L -o tinyllama-1.1b-q4.gguf \
+  "https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"
+
+# Upload to the existing release
+gh release upload v1.0.0-pluggable qwen2.5-1.5b-q4.gguf tinyllama-1.1b-q4.gguf \
+  --clobber --repo Aethel-Guard/embergard-models
+```
+
+Verify the SHA3-256 hashes above after download.
+
 ## Available release assets
 
 | Model | Filename | Size | Quant | Tokenizer family | License | Commercial use |
