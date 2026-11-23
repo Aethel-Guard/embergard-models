@@ -11,26 +11,14 @@ This repository distributes quantized model binaries via **GitHub Releases**. Th
 
 ## Release status
 
-Release `v1.0.0-pluggable` has been created. Asset uploads for `qwen2.5-1.5b-q4.gguf` and `tinyllama-1.1b-q4.gguf` are pending because:
+Release `v1.0.0-pluggable` is public and contains the following verified assets:
 
-1. Direct uploads from the local build host are blocked by the OpenClaw egress proxy (`uploads.github.com` returns `403` through the CONNECT tunnel).
-2. A GitHub Actions mirror workflow exists (`.github/workflows/mirror-models.yml`) but the `Aethel-Guard` org currently cannot run Actions due to a billing/spending-limit flag.
+| Asset | Size | SHA3-256 |
+|---|---|---|
+| `qwen2.5-1.5b-q4.gguf` | ~1.07 GB | `sha3-256:4984ab13737302f76ed665ac7cab9f42875c80eec4519eebc814c6535e875e17` |
+| `tinyllama-1.1b-q4.gguf` | ~638 MB | `sha3-256:27dd93103d21600b967d9f8fac8e87f31ff30ed2c613a6fee1207ef3bce6b69f` |
 
-To complete the mirror from an unblocked network, download the two files from HuggingFace and upload them to the release:
-
-```bash
-# From a machine without the OpenClaw proxy:
-curl -L -o qwen2.5-1.5b-q4.gguf \
-  "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/main/qwen2.5-1.5b-instruct-q4_k_m.gguf"
-curl -L -o tinyllama-1.1b-q4.gguf \
-  "https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"
-
-# Upload to the existing release
-gh release upload v1.0.0-pluggable qwen2.5-1.5b-q4.gguf tinyllama-1.1b-q4.gguf \
-  --clobber --repo Aethel-Guard/embergard-models
-```
-
-Verify the SHA3-256 hashes above after download.
+The repository is **public** so the Embergard app can download assets without authentication over HTTPS.
 
 ## Available release assets
 
